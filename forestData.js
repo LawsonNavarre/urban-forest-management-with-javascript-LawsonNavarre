@@ -26,43 +26,54 @@ let parks = [
     }
 ];
 
-// 1. Change the name of "Riverside Park" to "Riverside Greenspace"
-parks.forEach(park => {
-    if (park.name === "Riverside Park") {
-        park.name = "Riverside Greenspace";
+// 1. Change "Riverside Park" to "Riverside Greenspace"
+for (let i = 0; i < parks.length; i++) {
+    if (parks[i].name === "Riverside Park") {
+        parks[i].name = "Riverside Greenspace";
+        break; // no need to keep checking once we’ve found it
     }
-});
+}
 
-// 2. Change the tree species "Maple" to "Sugar Maple" in "Central Park"
+// 2. Rename "Maple" to "Sugar Maple" in "Central Park"
 parks.forEach(park => {
     if (park.name === "Central Park") {
         park.trees.forEach(tree => {
-            if (tree.species === "Maple") {
-                tree.species = "Sugar Maple";
-            }
+            if (tree.species === "Maple") tree.species = "Sugar Maple";
         });
     }
 });
 
 // 3. Add a new tree to "Central Park"
-parks.forEach(park => {
+for (let park of parks) {
     if (park.name === "Central Park") {
-        park.trees.push({ species: "Birch", age: 7, health: "Good", height: 18 });
+        park.trees.push({
+            species: "Birch", 
+            age: 7, 
+            health: "Good", 
+            height: 18
+        });
+        break;
     }
-});
+}
 
-// 4. Get a list of all tree species in "Central Park"
-let centralParkTrees = parks.find(park => park.name === "Central Park").trees.map(tree => tree.species);
+// 4. Get all tree species in "Central Park"
+const centralParkTrees = parks
+    .find(park => park.name === "Central Park")
+    .trees
+    .map(tree => tree.species);
 
-// 5. Calculate the average age of all trees
-let allTrees = parks.flatMap(park => park.trees);
-let totalAge = allTrees.reduce((sum, tree) => sum + tree.age, 0);
-let averageTreeAge = totalAge / allTrees.length;
+// 5. Calculate average tree age
+const allTrees = parks.flatMap(park => park.trees);
+const totalAge = allTrees.reduce((sum, tree) => sum + tree.age, 0);
+const averageTreeAge = totalAge / allTrees.length;
 
-// 6. Find the tallest tree
-let tallestTree = allTrees.reduce((tallest, tree) => tree.height > tallest.height ? tree : tallest, allTrees[0]);
+// 6. Find tallest tree
+let tallestTree = allTrees[0];
+for (let tree of allTrees) {
+    if (tree.height > tallestTree.height) tallestTree = tree;
+}
 
-// 7. Remove "playground" from "Central Park" facilities
+// 7. Remove "playground" from Central Park’s facilities
 parks.forEach(park => {
     if (park.name === "Central Park") {
         park.facilities = park.facilities.filter(facility => facility !== "playground");
@@ -70,11 +81,12 @@ parks.forEach(park => {
 });
 
 // 8. Convert parks array to JSON
-let parksJSON = JSON.stringify(parks, null, 2);
+const parksJSON = JSON.stringify(parks, null, 2); // Pretty format for better readability
 
-// 9. Display the name and facilities of the first item in the parks array
-console.log(`Name: ${parks[0].name}, Facilities: ${parks[0].facilities.join(", ")}`);
+// 9. Display name and facilities of the first park
+console.log(`Name: ${parks[0].name}`);
+console.log(`Facilities: ${parks[0].facilities.join(", ")}`);
 
-// 10. Display the species of the third item in the parks array
-console.log(`Species of third park's trees: ${parks[2].trees.map(tree => tree.species).join(", ")}`);
-
+// 10. Display species of trees in the third park
+const thirdParkSpecies = parks[2].trees.map(tree => tree.species);
+console.log(`Species of third park's trees: ${thirdParkSpecies.join(", ")}`);
